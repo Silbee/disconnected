@@ -210,8 +210,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b722ce13aa6535c4aaf921391333a28c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 20
-  CameraSpeed: 5
+  MoveSpeed: 10
+  RotateSpeed: 7
+  CameraSpeed: 4
+  LaserOffset: 1.39
+  LaserSpeed: 50
+  LaserPrefab: {fileID: 1199042676776896609, guid: 9a8ee35efcedccd40b4f7926badc4890,
+    type: 3}
+  MaxLasers: 10
 --- !u!54 &124739988
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -273,7 +279,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 124739986}
-  m_Mesh: {fileID: 5284991553290929056, guid: 8b9f173e084d2c94ca71308e1d3bc4ff, type: 3}
+  m_Mesh: {fileID: -4248634596075881249, guid: 6495322c91d98804687b67c3e6c875eb, type: 3}
 --- !u!4 &124739991
 Transform:
   m_ObjectHideFlags: 0
@@ -283,7 +289,7 @@ Transform:
   m_GameObject: {fileID: 124739986}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1.000001, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
