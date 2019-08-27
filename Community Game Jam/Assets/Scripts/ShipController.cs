@@ -36,6 +36,7 @@ public class ShipController : MonoBehaviour
         for (int i = 0; i < MaxLasers; i++)
         {
             Lasers[i] = Instantiate(LaserPrefab, CameraPosition + Vector3.up, Quaternion.identity).GetComponent<Rigidbody>();
+            Lasers[i].gameObject.name = "Laser" + i;
             Lasers[i].gameObject.SetActive(false);
         }
     }
