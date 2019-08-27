@@ -3,13 +3,15 @@ using TMPro;
 
 public class CoordinateDisplay : MonoBehaviour
 {
-    CoordinateDisplay Instance;
+    public static CoordinateDisplay Instance;
 
     public TMP_Text CoordinateText;
     public TMP_Text DialogueText;
     public TMP_Text NameText;
 
     Transform SpaceShipTransform;
+    Animator DialogueAnimation;
+
     Vector3 DesiredLocation;
 
     void Start()
@@ -18,6 +20,7 @@ public class CoordinateDisplay : MonoBehaviour
             Instance = this;
 
         SpaceShipTransform = GameObject.FindGameObjectWithTag("GameController").transform;
+        DialogueAnimation = GetComponent<Animator>();
 
         ChangeLocation();
 
@@ -29,7 +32,7 @@ public class CoordinateDisplay : MonoBehaviour
     {
         CoordinateText.SetText("Location: X: " + SpaceShipTransform.position.x.ToString("F0") + ", Y: " + SpaceShipTransform.position.z.ToString("F0"));
 
-        if (Vector3.Distance(DesiredLocation, SpaceShipTransform.position) < 2.5F)
+        if (Vector3.Distance(DesiredLocation, SpaceShipTransform.position) < 5)
         {
             ChangeLocation();
         }
@@ -50,7 +53,8 @@ public class CoordinateDisplay : MonoBehaviour
 
     void ChangeLocation()
     {
-        DesiredLocation = new Vector3(Random.Range(-25, 26), 0, Random.Range(-25, 26));
+        DesiredLocation = new Vector3(Random.Range(-100, 101), 0, Random.Range(-100, 101));
         SetDialogue("GO TO: X: " + DesiredLocation.x + ", Y:" + DesiredLocation.z);
+        DialogueAnimation.Play("DialoguePopup");
     }
 }
