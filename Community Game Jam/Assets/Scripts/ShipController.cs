@@ -2,15 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipController : MonoBehaviour
+public class ShipController : EntityBehaviour
 {
     public float MoveSpeed = 10f;
     public float RotateSpeed = 10f;
     public float CameraSpeed = 10f;
 
+    [Header("Lasers")]
     public float LaserOffset = 1f;
     public float LaserSpeed = 10f;
     public GameObject LaserPrefab;
+
+    public AudioClip ShootClip;
+    [Range(0,1)]
+    public float ShootVolume = 1f;
 
     public int MaxLasers = 10;
     Rigidbody[] Lasers;
@@ -18,12 +23,15 @@ public class ShipController : MonoBehaviour
 
     Vector3 LastRawInputAxis = Vector3.zero;
 
-    Transform PlayerCamera;
     Rigidbody rb;
+    AudioSource source;
+
+    Transform PlayerCamera;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        source = GetComponent<AudioSource>();
         PlayerCamera = GameObject.FindGameObjectWithTag("CameraRig").transform;
 
         //Get location of the main camera, used for spawning the pool of lasers directly above
@@ -36,6 +44,7 @@ public class ShipController : MonoBehaviour
         for (int i = 0; i < MaxLasers; i++)
         {
             Lasers[i] = Instantiate(LaserPrefab, CameraPosition + Vector3.up, Quaternion.identity).GetComponent<Rigidbody>();
+            Physics.IgnoreCollision(Lasers[i].GetComponent<Collider>(), GetComponent<Collider>());
             Lasers[i].gameObject.name = "Laser" + i;
             Lasers[i].gameObject.SetActive(false);
         }
@@ -76,6 +85,9 @@ public class ShipController : MonoBehaviour
 
         //Apply new forces on laser
         Laser.AddForce(transform.forward * LaserSpeed, ForceMode.Impulse);
+
+        //Pew
+        source.PlayOneShot(ShootClip, ShootVolume);
 
         //Update index to next laser
         LaserIndex++;
