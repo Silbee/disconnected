@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - CameraRig
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - Minimap Object Inclusive
   - Minimap Object Exclusive
   - Main Camera Exclusive
-  - 
+  - Entities
   - 
   - 
   - 
