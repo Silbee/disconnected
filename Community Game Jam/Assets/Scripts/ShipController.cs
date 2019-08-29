@@ -10,15 +10,18 @@ public class ShipController : EntityBehaviour
 
     [Header("Lasers")]
     public float LaserOffset = 1f;
-    public float LaserSpeed = 10f;
     public GameObject LaserPrefab;
+
+    [Header("FOV Settings")]
+    public float MaxRange = 15;
+    public float FOVAngle = 30;
 
     public AudioClip ShootClip;
     [Range(0,1)]
     public float ShootVolume = 1f;
 
     public int MaxLasers = 10;
-    Rigidbody[] Lasers;
+    ProjectileScript[] Lasers;
     int LaserIndex = 0;
 
     Vector3 LastRawInputAxis = Vector3.zero;
@@ -38,12 +41,12 @@ public class ShipController : EntityBehaviour
         Vector3 CameraPosition = GameObject.FindGameObjectWithTag("MainCamera").transform.position;
 
         //Array for all lasers in game
-        Lasers = new Rigidbody[MaxLasers];
+        Lasers = new ProjectileScript[MaxLasers];
 
         //Populate the Lasers array
         for (int i = 0; i < MaxLasers; i++)
         {
-            Lasers[i] = Instantiate(LaserPrefab, CameraPosition + Vector3.up, Quaternion.identity).GetComponent<Rigidbody>();
+            Lasers[i] = Instantiate(LaserPrefab, CameraPosition + Vector3.up, Quaternion.identity).GetComponent<ProjectileScript>();
             Physics.IgnoreCollision(Lasers[i].GetComponent<Collider>(), GetComponent<Collider>());
             Lasers[i].gameObject.name = "Laser" + i;
             Lasers[i].gameObject.SetActive(false);
@@ -73,18 +76,14 @@ public class ShipController : EntityBehaviour
     void Shoot()
     {
         //Get next laser
-        Rigidbody Laser = Lasers[LaserIndex];
+        ProjectileScript Laser = Lasers[LaserIndex];
         Laser.gameObject.SetActive(true);
 
-        //Reset all forces on current laser
-        Laser.velocity = Vector3.zero;
-
         //Set the correct position and rotation for current laser
-        Laser.position = transform.position + transform.forward * LaserOffset;
-        Laser.rotation = Quaternion.LookRotation(transform.forward);
+        Laser.transform.position = transform.position + transform.forward * LaserOffset;
+        Laser.transform.rotation = Quaternion.LookRotation(transform.forward);
 
-        //Apply new forces on laser
-        Laser.AddForce(transform.forward * LaserSpeed, ForceMode.Impulse);
+        Laser.Shoot(GetEntityInFOV());
 
         //Pew
         source.PlayOneShot(ShootClip, ShootVolume);
@@ -93,5 +92,25 @@ public class ShipController : EntityBehaviour
         LaserIndex++;
         if (LaserIndex >= Lasers.Length)
             LaserIndex = 0;
+    }
+
+    Transform GetEntityInFOV()
+    {
+        Collider[] entities = Physics.OverlapSphere(transform.position, MaxRange, LayerMask.GetMask("Entities"));
+        List<Transform> entitiesInRange = new List<Transform>();
+
+        for (int i = 0; i < entities.Length; i++)
+        {
+            if (entities[i].gameObject == gameObject) continue;
+            Vector3 direction = entities[i].transform.position - transform.position;
+            float angle = Vector3.Angle(direction, transform.forward);
+            if (angle < FOVAngle * 0.5f)
+                entitiesInRange.Add(entities[i].transform);
+        }
+
+        if (entitiesInRange.Count > 0)
+            return entitiesInRange[Random.Range(0, entitiesInRange.Count)];
+        else
+            return null;
     }
 }
