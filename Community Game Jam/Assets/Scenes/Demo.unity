@@ -216,7 +216,6 @@ MonoBehaviour:
   RotateSpeed: 7
   CameraSpeed: 4
   LaserOffset: 1.39
-  LaserSpeed: 50
   LaserPrefab: {fileID: 1199042676776896609, guid: 9a8ee35efcedccd40b4f7926badc4890,
     type: 3}
   MaxRange: 15
