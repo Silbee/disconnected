@@ -158,7 +158,6 @@ MonoBehaviour:
   RotateSpeed: 7
   CameraSpeed: 4
   LaserOffset: 1.39
-  LaserSpeed: 50
   LaserPrefab: {fileID: 1199042676776896609, guid: 9a8ee35efcedccd40b4f7926badc4890,
     type: 3}
   MaxRange: 15
@@ -1736,7 +1735,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &787400482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2136,7 +2135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &861709377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2836,7 +2835,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1417019855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3106,7 +3105,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1484708352
 MonoBehaviour:
   m_ObjectHideFlags: 0
