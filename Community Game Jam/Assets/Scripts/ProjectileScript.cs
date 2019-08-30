@@ -17,13 +17,14 @@ public class ProjectileScript : MonoBehaviour
 
     public void Shoot(Transform homing)
     {
+        rb.angularVelocity = Vector3.zero;
         ObjectToHome = homing;
     }
 
     void FixedUpdate()
     {
         rb.velocity = transform.forward * Speed;
-        if (!ObjectToHome)
+        if (!ObjectToHome || !ObjectToHome.gameObject.activeInHierarchy)
             return;
 
         rb.velocity = transform.forward * Speed;
@@ -33,7 +34,7 @@ public class ProjectileScript : MonoBehaviour
 
         float rotateAmount = Vector3.Cross(direction, transform.forward).y;
 
-        rb.angularVelocity = Vector3.up * rotateAmount * RotateSpeed;
+        rb.angularVelocity = Vector3.up * -rotateAmount * RotateSpeed;
     }
 
     void OnCollisionEnter(Collision collision)

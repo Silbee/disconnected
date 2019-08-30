@@ -8,6 +8,8 @@ public class ShipController : EntityBehaviour
     public float RotateSpeed = 10f;
     public float CameraSpeed = 10f;
 
+    public TargetMarker Marker;
+
     [Header("Lasers")]
     public float LaserOffset = 1f;
     public GameObject LaserPrefab;
@@ -61,8 +63,11 @@ public class ShipController : EntityBehaviour
         if (LastRawInputAxis != Vector3.zero)
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(-LastRawInputAxis), Time.deltaTime * RotateSpeed);
 
+        Transform target = GetEntityInFOV();
+        Marker.ObjectToTarget = target;
+
         if (Input.GetKeyDown(KeyCode.Space))
-            Shoot();
+            Shoot(target);
     }
 
     void FixedUpdate()
@@ -73,7 +78,7 @@ public class ShipController : EntityBehaviour
         PlayerCamera.position = Vector3.Lerp(PlayerCamera.position, transform.position, Time.deltaTime * CameraSpeed);
     }
 
-    void Shoot()
+    void Shoot(Transform target)
     {
         //Get next laser
         ProjectileScript Laser = Lasers[LaserIndex];
@@ -83,7 +88,7 @@ public class ShipController : EntityBehaviour
         Laser.transform.position = transform.position + transform.forward * LaserOffset;
         Laser.transform.rotation = Quaternion.LookRotation(transform.forward);
 
-        Laser.Shoot(GetEntityInFOV());
+        Laser.Shoot(target);
 
         //Pew
         source.PlayOneShot(ShootClip, ShootVolume);
@@ -108,9 +113,15 @@ public class ShipController : EntityBehaviour
                 entitiesInRange.Add(entities[i].transform);
         }
 
-        if (entitiesInRange.Count > 0)
-            return entitiesInRange[Random.Range(0, entitiesInRange.Count)];
-        else
-            return null;
+        Transform NearestEntity = null;
+
+        for (int i = 0; i < entitiesInRange.Count; i++)
+        {
+            if (!NearestEntity) NearestEntity = entitiesInRange[i];
+            if (Vector3.Distance(transform.position, entitiesInRange[i].position) < Vector3.Distance(transform.position, NearestEntity.position))
+                NearestEntity = entities[i].transform;
+        }
+
+        return NearestEntity;
     }
 }
