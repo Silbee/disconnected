@@ -5,12 +5,17 @@ public class CoordinateDisplay : MonoBehaviour
 {
     public static CoordinateDisplay Instance;
 
-    public Transform HotSpotLocation;
+    public Transform HotSpotMinimapLocation;
+    public Transform SpaceShipMinimapTransform;
+    public Transform FakeHotSpotMinimapLocation;
 
     public TMP_Text CoordinateText;
     public TMP_Text DialogueText;
     public TMP_Text NameText;
 
+    Vector3 DesiredLocation;
+
+    MeshRenderer FakeHotspotMinimapLocationRenderer;
     Transform SpaceShipTransform;
     Animator DialogueAnimation;
 
@@ -19,22 +24,34 @@ public class CoordinateDisplay : MonoBehaviour
         if (Instance == null)
             Instance = this;
 
+        FakeHotspotMinimapLocationRenderer = FakeHotSpotMinimapLocation.GetComponentInChildren<MeshRenderer>();
+
         SpaceShipTransform = GameObject.FindGameObjectWithTag("GameController").transform;
         DialogueAnimation = GetComponent<Animator>();
 
         ChangeLocation();
 
         SetName("Sattelite Dish");
-        SetDialogue("GO TO: X: " + HotSpotLocation.position.x + ", Y:" + HotSpotLocation.position.z);
+        SetDialogue("GO TO: X: " + DesiredLocation.x + ", Y:" + DesiredLocation.z);
     }
 
     void Update()
     {
         CoordinateText.SetText("Location: X: " + SpaceShipTransform.position.x.ToString("F0") + ", Y: " + SpaceShipTransform.position.z.ToString("F0"));
 
-        if (Vector3.Distance(HotSpotLocation.position, SpaceShipTransform.position) < 3)
-        {
+        if (Vector3.Distance(HotSpotMinimapLocation.position, SpaceShipTransform.position) < 3)
             ChangeLocation();
+
+        Vector3 direction = HotSpotMinimapLocation.position - SpaceShipTransform.position;
+
+        if (Vector3.Distance(SpaceShipTransform.position, DesiredLocation) > 39)
+        {
+            FakeHotspotMinimapLocationRenderer.enabled = true;
+            FakeHotSpotMinimapLocation.rotation = Quaternion.Euler(0, SpaceShipTransform.position.x > HotSpotMinimapLocation.position.x ? -Vector3.Angle(direction, SpaceShipMinimapTransform.forward) : Vector3.Angle(direction, SpaceShipMinimapTransform.forward), 0);
+        }
+        else
+        {
+            FakeHotspotMinimapLocationRenderer.enabled = false;
         }
     }
 
@@ -53,8 +70,10 @@ public class CoordinateDisplay : MonoBehaviour
 
     void ChangeLocation()
     {
-        HotSpotLocation.position = new Vector3(Random.Range(-100, 101), 0, Random.Range(-100, 101));
-        SetDialogue("GO TO: X: " + HotSpotLocation.position.x + ", Y:" + HotSpotLocation.position.z);
+        DesiredLocation = new Vector3(Random.Range(-25, 26), 0, Random.Range(-25, 26));
+        HotSpotMinimapLocation.position = DesiredLocation;
+
+        SetDialogue("GO TO: X: " + DesiredLocation.x + ", Y:" + DesiredLocation.z);
         DialogueAnimation.Play("DialoguePopup", 0, 0);
     }
 }
